@@ -1,0 +1,29 @@
+{
+  "name": "seubarriga",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "npx eslint src/** test/** --fix",
+    "start": "node src/server.js",
+    "secure-mode":"jest --watchAll --verbose=true"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.21.0",
+    "jest": "23.6.0",
+    "nodemon": "^2.0.19",
+    "supertest": "3.3.0"
+  },
+  "dependencies": {
+    "body-parser": "1.20.0",
+    "consign": "0.1.6",
+    "express": "4.16.4",
+    "knex": "2.2.0",
+    "knex-logger": "^0.1.0",
+    "pg": "8.7.3"
+  }
+}
