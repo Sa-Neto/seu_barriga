@@ -7,7 +7,7 @@
     "test": "jest",
     "lint": "npx eslint src/** test/** --fix",
     "start": "node src/server.js",
-    "secure-mode":"jest --watchAll --verbose=true"
+    "secure-mode": "jest --watchAll --verbose=true"
   },
   "keywords": [],
   "author": "",
@@ -19,11 +19,15 @@
     "supertest": "3.3.0"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.20.0",
     "consign": "0.1.6",
     "express": "4.16.4",
+    "jwt-simple": "0.5.5",
     "knex": "2.2.0",
     "knex-logger": "^0.1.0",
+    "passport": "0.4.0",
+    "passport-jwt": "4.0.0",
     "pg": "8.7.3"
   }
 }
