@@ -8,8 +8,8 @@ const secret = 'segredo!'
 module.exports = (app) => {
     const router = express.Router();
 
-        router.post('/signin', (req,res,next) => {
-        app.services.user.findOne({mail:req.body.mail})
+    router.post('/signin', (req,res,next) => {
+    app.services.user.findOne({mail:req.body.mail})
             .then((user) => {
                 if(!user) throw new ValidationError('Usuário ou senha inválido')
                 if(bcrypt.compareSync(req.body.passwd,user.passwd)){
