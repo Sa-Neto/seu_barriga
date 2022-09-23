@@ -33,7 +33,6 @@ test('Não deve autenticar usuário com senha errada',() => {
     .send({mail,passwd:"654321"})
     .then((res) => {
         expect(res.status).toBe(400)
-        console.log(res.body)
         expect(res.body.error).toBe('Usuário ou senha inválido')
     })
     )

@@ -25,7 +25,6 @@ beforeAll(async () => {
         {name: 'Acc #2', user_id: user2.id},
     ],'*');
     [accUser, accUser2] = accs
-    console.log(accUser)
 });
 
 
@@ -63,7 +62,7 @@ test('Transações de entrada devem ser positivas', () => {
     });
 });
 
-test('Transações de entrada devem ser positivas', () => {
+test('Transações de saida devem ser negativas', () => {
     return request(app).post(MAIN_ROUTE)
         .set('authorization' , `bearer ${user.token}`)
         .send({description: 'New T', date: new Date(), ammount: 100, type: 'O', acc_id: accUser.id})
@@ -84,34 +83,24 @@ test('Não deve inserir um transação sem descrição', () => {
         })
     });
 
-describe('Ao tentar inserir uma transação inválida', () => {
-    const validTransaction = { description: 'New T', date: new Date(), ammount:100, type: 'I', acc_id: accUser.id }
+ describe('Ao tentar inserir uma transação inválida', () => {
+     const testTemplate = (newData, errorMessage) =>{
+         return request(app).post(MAIN_ROUTE)
+             .set('authorization', `bearer ${user.token}`)
+             .send({ description: 'New T', date: new Date(), ammount:100, type: 'I', acc_id: accUser.id, ...newData})
+             .then((res) => {
+                 expect(res.status).toBe(400)
+                 expect(res.body.error).toBe(errorMessage)
+             })
+     }
+    test('Não deve inserir sem descrição',() => testTemplate({description: null}, 'Descrição é um atributo obrigatório') );
+    test('Não deve inserir sem valor',() => testTemplate({ammount: null}, 'Valor é um atributo obrigatório') );
+    test('Não deve inserir uma transação sem data',() => testTemplate({date: null}, 'Data é um atributo obrigatório') );
+    test('Não deve inserir uma transação sem conta',() => {testTemplate({acc_id: null}, 'Conta é um atributo obrigatório') });
+    test('Não deve inserir uma transação sem tipo',() => {testTemplate({type: null}, 'Tipo é um atributo obrigatório') });
+    test('Não deve inserir uma transação sem tipo inválido',() => {testTemplate({type: 'A'}, 'Tipo inválido') });
     
-    const testTemplate = (newData, errorMessage) =>{
-        return request(app).post(MAIN_ROUTE)
-            .set('authorization', `bearer ${user.token}`)
-            .send({...validTransaction, ...newData})
-            .then((res) => {
-                expect(res.status).toBe(400)
-                expect(res.body.error).toBe(errorMessage)
-            })
-    }
-    //test('Não deve inserir sem descrição',() => testTemplate({description: null}, 'Decrição é um atributo obrigatório') );
-    test.skip('Não deve inserir uma transação sem valor',() => {
-        return request(app).post(MAIN_ROUTE)
-            .set('authorization', `bearer ${user.token}`)
-            .send({description: 'Desc', date: new Date(), type: 'O', acc_id: accUser.id})
-            .then((res) => {
-                expect(res.status).toBe(400)
-                expect(res.body.error).toBe('Valor é um atributo obrigatório')
-            })
-    });
-    test.skip('Não deve inserir uma transação sem data',() => {});
-    test.skip('Não deve inserir uma transação sem conta',() => {});
-    test.skip('Não deve inserir uma transação sem tipo',() => {});
-    test.skip('Não deve inserir uma transação sem tipo inválido',() => {});
-    
-})
+ })
 
 test('Deve retornar uma transação por ID', () => {
     return app.db('transactions').insert(
@@ -158,6 +147,17 @@ test('Não deve remover uma transação de outro usuário', () => {
         .then((res) => {
             expect(res.status).toBe(403);
             expect(res.body.error).toBe('Este recurso não pertence ao usuário')
+        })
+    )
+});
+test('Não deve remover consta com transação', () => {
+    return app.db('transactions').insert(
+        {description: 'To delete', date: new Date(), ammount:100, type: 'I', acc_id: accUser.id}, ['id'] ,
+    ).then(trans => request(app).delete(`/v1/accounts/${accUser.id}`)
+        .set('authorization', `bearer ${user.token}`)
+        .then((res) => {
+            expect(res.status).toBe(400);
+            expect(res.body.error).toBe('Essa conta possui transações associadas')
         })
     )
 });

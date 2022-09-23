@@ -7,7 +7,7 @@
     "test": "jest",
     "lint": "npx eslint src/** test/** --fix",
     "start": "node src/server.js",
-    "secure-mode": "jest --watchAll --verbose=true"
+    "secure-mode": "jest --detectOpenHandles --watchAll verbose=true"
   },
   "keywords": [],
   "author": "",
@@ -24,8 +24,9 @@
     "consign": "0.1.6",
     "express": "4.16.4",
     "jwt-simple": "0.5.5",
-    "knex": "2.2.0",
+    "knex": "0.15.2",
     "knex-logger": "^0.1.0",
+    "moment": "2.22.2",
     "passport": "0.4.0",
     "passport-jwt": "4.0.0",
     "pg": "8.7.3"

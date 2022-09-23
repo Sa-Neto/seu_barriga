@@ -1,0 +1,4 @@
+{
+  "typescript.inlayHints.parameterNames.enabled": "none",
+  "typescript.suggest.objectLiteralMethodSnippets.enabled": true
+}

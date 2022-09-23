@@ -8,8 +8,7 @@ module.exports = {
             password:'saneto@044',
             database:'barriga'
         },
-        migrations:{
-            directory:'src/migrations',
-        }
+        migrations: { directory: 'src/migrations'},
+        seeds: { directory: 'src/seeds'}
     }
 }
